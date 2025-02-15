@@ -1,6 +1,12 @@
 from django.urls import path
-from .views import home  # Ensure this is correctly imported
+
+
+from django.urls import path
+from .views import home, create_post, signup
 
 urlpatterns = [
-    path('', home, name='home'),  # Define at least one valid URL pattern
+    path('', home, name='home'),
+    path('create/', create_post, name='create_post'),
+    path('signup/', signup, name='signup'),
 ]
+

@@ -18,8 +18,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from forum.views import home, signup
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('forum.urls')),  # Ensure this line is correct
+    path('', home, name='home'),
+    path('accounts/', include('django.contrib.auth.urls')),  # Built-in Django authentication
+    path('signup/', signup, name='signup'),  # Custom signup page
 ]
