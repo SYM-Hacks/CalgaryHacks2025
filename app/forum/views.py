@@ -1,3 +1,6 @@
+
+
+# Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -19,3 +22,16 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'forum/signup.html', {'form': form})
+
+def home(request):
+    posts = Post.objects.all()
+    return render(request, 'forum/home.html', {'posts': posts})
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        Post.objects.create(user=request.user, title=title, content=content)
+        return redirect('/')
+    return render(request, 'forum/create_post.html')
