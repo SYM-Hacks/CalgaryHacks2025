@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Community</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Community Posts</title>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Welcome to the Community</h1>
-            <nav>
-                <a href="posts.html" class="btn">View Posts</a>
-                <a href="messaging.html" class="btn">Messages</a>
-                <a href="login.html" class="btn">Logout</a>
-            </nav>
-        </header>
+        <h1>Community Posts</h1>
 
-        <section class="intro">
-            <p>Join discussions, share your thoughts, and connect with like-minded people.</p>
-        </section>
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}! <a href="{% url 'logout' %}">Logout</a></p>
+            <a href="{% url 'create_post' %}">Create New Post</a>
+        {% else %}
+            <p><a href="{% url 'login' %}">Login</a> | <a href="{% url 'signup' %}">Sign Up</a></p>
+        {% endif %}
+
+        {% for post in posts %}
+            <div class="post">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+                <small>Posted by <strong>{{ post.user.username }}</strong> on {{ post.created_at }}</small>
+            </div>
+        {% empty %}
+            <p>No posts yet. Be the first to post!</p>
+        {% endfor %}
     </div>
     <script src="script.js"></script>
 </body>
