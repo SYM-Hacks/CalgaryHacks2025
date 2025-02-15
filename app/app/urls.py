@@ -16,13 +16,17 @@ Including another URLconf
 """
 
 
+
+
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth.views import LoginView
 from forum.views import home, signup
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
-    path('accounts/', include('django.contrib.auth.urls')),  # Built-in Django authentication
-    path('signup/', signup, name='signup'),  # Custom signup page
+    path('accounts/login/', LoginView.as_view(), name='login'),  # Custom login page
+    path('signup/', signup, name='signup'),
+    path('', home, name='home'),  # Home is now protected (only logged-in users can access)
+    path('accounts/', include('django.contrib.auth.urls')),  # Default auth system
 ]
