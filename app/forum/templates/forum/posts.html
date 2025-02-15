@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts - Community</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Community Posts</h1>
+            <nav>
+                <a href="home.html" class="btn">Home</a>
+                <a href="messaging.html" class="btn">Messages</a>
+                <a href="login.html" class="btn">Logout</a>
+            </nav>
+        </header>
+        
+        <section class="post-form">
+            <h2>Create a New Post</h2>
+            <form method="POST">
+                <input type="text" name="title" placeholder="Post Title" required>
+                <textarea name="content" placeholder="Write your post here..." required></textarea>
+                <button type="submit" class="btn">Post</button>
+            </form>
+        </section>
+        
+        <section class="posts">
+            <h2>Recent Posts</h2>
+            <div class="post">
+                <h3>Sample Post Title</h3>
+                <p>This is an example of a community post.</p>
+                <small>Posted by <strong>User1</strong> on 2025-02-15</small>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

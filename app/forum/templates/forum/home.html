@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Community Posts</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Community</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Community Posts</h1>
-    {% for post in posts %}
-        <div>
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.content }}</p>
-            <small>Posted on {{ post.created_at }}</small>
-        </div>
-    {% endfor %}
+    <div class="container">
+        <header>
+            <h1>Welcome to the Community</h1>
+            <nav>
+                <a href="posts.html" class="btn">View Posts</a>
+                <a href="messaging.html" class="btn">Messages</a>
+                <a href="login.html" class="btn">Logout</a>
+            </nav>
+        </header>
+
+        <section class="intro">
+            <p>Join discussions, share your thoughts, and connect with like-minded people.</p>
+        </section>
+    </div>
 </body>
 </html>
