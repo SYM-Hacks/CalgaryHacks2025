@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Community</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+    </head>
 <body>
     <div class="container">
         <header>
@@ -21,5 +22,6 @@
             <p>Join discussions, share your thoughts, and connect with like-minded people.</p>
         </section>
     </div>
+    <script src="{% static 'forum/script.js' %}"></script>
 </body>
 </html>
