@@ -109,9 +109,11 @@ def send_message(request):
 
     return JsonResponse({"status": "error", "message": "Invalid request"}, status=400)
 @login_required
+@login_required
 def profile_view(request):
-    # You can pass additional context if needed, here we're just using request.user
-    return render(request, 'forum/profile.html')
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    return render(request, 'forum/profile.html', {'bio': profile.bio})
+
 
 @login_required
 def update_bio_view(request):

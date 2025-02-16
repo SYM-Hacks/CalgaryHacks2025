@@ -21,14 +21,15 @@
             margin-top: 10px;
         }
         .bio-edit {
-            display: none;
+            display: none; /* Initially hidden */
         }
     </style>
     <script>
         function toggleBioEdit() {
             var displayDiv = document.getElementById('bio-display');
             var editDiv = document.getElementById('bio-edit');
-            if (editDiv.style.display === 'none') {
+
+            if (editDiv.style.display === 'none' || editDiv.style.display === '') {
                 editDiv.style.display = 'block';
                 displayDiv.style.display = 'none';
             } else {
@@ -53,6 +54,7 @@
 
         <section class="bio-section">
             <h3>Your Bio</h3>
+
             <!-- Display Mode -->
             <div id="bio-display" class="bio-display">
                 {% if bio %}
@@ -65,7 +67,7 @@
 
             <!-- Edit Mode -->
             <div id="bio-edit" class="bio-edit">
-                <form method="post" action="{% url 'update_bio' %}">
+                <form method="post" action="{% url 'update_bio' %}" onsubmit="setTimeout(function() { window.location.reload(); }, 500);">
                     {% csrf_token %}
                     <textarea name="bio" rows="4" placeholder="Enter your bio...">{{ bio }}</textarea>
                     <br>
