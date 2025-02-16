@@ -69,45 +69,17 @@ def create_post(request):
             return redirect('home')
 
     categories = Category.objects.all()
-    return render(request, 'forum/create_post.html', {'categories': categories})
+    return render(request, 'forum/post.html', {'categories': categories})
 
 
 
 @login_required
-def create_post(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        category_id = request.POST.get('category')
-
-        # Check if the category exists before assigning it
-        try:
-            category = Category.objects.get(id=category_id)
-        except Category.DoesNotExist:
-            category = None
-
-        if category:
-            Post.objects.create(user=request.user, title=title, content=content, category=category)
-            return redirect('home')
-
-    categories = Category.objects.all()
-    return render(request, 'forum/create_post.html', {'categories': categories})
-
 @login_required
 def posts_view(request):
-    if request.method == "POST":
-        title = request.POST.get("title")
-        content = request.POST.get("content")
-        author = request.user  # Ensure author is assigned
-
-        if title and content:
-            Post.objects.create(title=title, content=content, author=author)
-
-        return redirect("posts")  # Redirect after poçsting
-
-    # Fetch all posts to display
+    categories = Category.objects.all()
     posts = Post.objects.all().order_by("-created_at")
-    return render(request, "forum/posts.html", {"posts": posts})
+    return render(request, "forum/posts.html", {"posts": posts, "categories": categories})
+
 
 
 
