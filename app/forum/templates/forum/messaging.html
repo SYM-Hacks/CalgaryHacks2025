@@ -6,7 +6,7 @@
     <title>Messages - Community</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
-    </head>
+</head>
 <body>
     <div class="container">
         <header>
@@ -25,6 +25,7 @@
                 <p><strong>User2:</strong> Hi! How's your day going?</p>
             </div>
             <form method="POST" class="message-form">
+                {% csrf_token %}
                 <input type="text" name="message" placeholder="Type your message..." required>
                 <button type="submit" class="btn">Send</button>
             </form>
