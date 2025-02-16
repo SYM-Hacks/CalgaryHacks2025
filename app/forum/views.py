@@ -35,3 +35,14 @@ def logout_view(request):
 def home(request):
     posts = Post.objects.all()
     return render(request, 'forum/home.html', {'posts': posts})
+
+@login_required
+def posts_view(request):
+    """View to display all posts"""
+    posts = Post.objects.all()
+    return render(request, 'forum/posts.html', {'posts': posts})
+
+@login_required
+def messaging_view(request):
+    """View for the messaging page"""
+    return render(request, 'forum/messaging.html')
