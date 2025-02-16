@@ -47,12 +47,13 @@ def home(request):
 
     # Get admin users (staff or superusers)
     admin_users = User.objects.filter(is_staff=True)  # Only staff/admin users
+    
 
     # Filter posts by admin users
     if category_filter:
         posts = Post.objects.filter(user__in=admin_users, category__name=category_filter)
     else:
-        posts = Post.objects.filter(user__in=admin_users)  # Only admin posts
+        posts = Post.objects.filter(user__in=admin_users).order_by('-created_at')
 
     categories = Category.objects.all()
     return render(request, 'forum/home.html', {'posts': posts, 'categories': categories})

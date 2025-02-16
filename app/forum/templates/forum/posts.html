@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Posts - Community</title>
-    {% load static %}
     <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+    <style>
+        /* Style for the attached post image */
+        .post-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -32,11 +41,11 @@
         <!-- Post Creation Form -->
         <section class="post-form">
             <h2>Create a New Post</h2>
-            <form method="POST" action="{% url 'create_post' %}">
+            <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="text" name="title" placeholder="Post Title" required>
                 <textarea name="content" placeholder="Write your post here..." required></textarea>
-            
+                
                 <label for="category">Select Category:</label>
                 <select name="category" required>
                     <option value="" disabled selected>-- Choose a Category --</option>
@@ -44,7 +53,10 @@
                         <option value="{{ category.id }}">{{ category.name }}</option>
                     {% endfor %}
                 </select>
-            
+                
+                <label for="image">Attach an image (optional):</label>
+                <input type="file" name="image" id="image" accept="image/*">
+                
                 <button type="submit" class="btn">Post</button>
             </form>
         </section>
@@ -56,6 +68,9 @@
                 <div class="post">
                     <h3>{{ post.title }}</h3>
                     <p>{{ post.content }}</p>
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="Post Image" class="post-image">
+                    {% endif %}
                     <small>
                         Posted by 
                         <strong>
@@ -65,8 +80,7 @@
                         </strong>
                         in <strong>{{ post.category.name }}</strong> 
                         on {{ post.created_at }}
-                    </small>
-                    
+                    </small>                    
                 </div>
             {% empty %}
                 <p>No posts yet in this category. Be the first to share something!</p>
