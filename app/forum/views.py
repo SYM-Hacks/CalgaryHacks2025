@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Profile, Chat, Message, Post, Category, Like, Follow
+from .models import Profile, Chat, Message, Post, Category, Like, Follow, Comment
 import json
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -332,4 +332,12 @@ def follow_user(request, user_id):
         follow_obj.delete()
     return redirect('user_profile', user_id=user_to_follow.id)
 
-# If you have a user_profile route, you'd see the changes after redirect
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == "POST":
+        content = request.POST.get("comment")
+        if content:
+            Comment.objects.create(post=post, user=request.user, content=content)
+    return redirect("posts")
