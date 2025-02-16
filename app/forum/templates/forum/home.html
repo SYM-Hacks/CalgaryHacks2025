@@ -13,26 +13,77 @@
             margin-top: 10px;
             border-radius: 8px;
         }
+        /* New header layout: three columns */
+        .header-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .header-left {
+            flex: 0 0 auto;
+        }
+        .header-left img {
+            width: 80px;
+            height: auto;
+        }
+        .header-center {
+            flex: 1 1 auto;
+            text-align: center;
+        }
+        .header-center h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .header-center p {
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        .header-right {
+            flex: 0 0 auto;
+            text-align: right;
+        }
+        .nav-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        /* Center text inside buttons */
+        .nav-vertical a.btn {
+            text-align: center;
+        }
+        /* Additional spacing for post previews */
+        .post-preview {
+            margin-bottom: 30px;
+        }
+        /* Read More button styling */
+        .read-more-container {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Welcome to the Community</h1>
-            <nav>
-                <a href="{% url 'posts' %}" class="btn">View Posts</a>
-                <a href="{% url 'messages' %}" class="btn">Messages</a>
-                <a href="{% url 'profile' %}" class="btn">Profile</a>
-                {% if user.is_authenticated %}
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn">Login</a>
-                {% endif %}
-            </nav>                       
+        <header class="header-main">
+            <div class="header-left">
+                <img src="{% static 'forum/community.png' %}" alt="Community Logo">
+            </div>
+            <div class="header-center">
+                <h1>Welcome to the Calgary Community</h1>
+                <p>Join discussions, share your thoughts, and connect with like-minded people.</p>
+            </div>
+            <div class="header-right">
+                <nav class="nav-vertical">
+                    <a href="{% url 'posts' %}" class="btn">View Posts</a>
+                    <a href="{% url 'messages' %}" class="btn">Messages</a>
+                    <a href="{% url 'profile' %}" class="btn">Profile</a>
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'login' %}" class="btn">Login</a>
+                    {% endif %}
+                </nav>
+            </div>
         </header>
-
-        <section class="intro">
-            <p>Join discussions, share your thoughts, and connect with like-minded people.</p>
-        </section>
 
         <!-- Category Filter -->
         <section class="category-filter">
@@ -65,12 +116,13 @@
                         in <strong>{{ post.category.name }}</strong> 
                         on {{ post.created_at }}
                     </small>
-                    <br><br>
-                    <a href="{% url 'posts' %}" class="btn">Read More</a>
                 </div>
             {% empty %}
                 <p>No posts from admins yet.</p>
             {% endfor %}
+            <div class="read-more-container">
+                <a href="{% url 'posts' %}" class="btn">Read More</a>
+            </div>
         </section>
     </div>
     <script src="{% static 'forum/script.js' %}"></script>

@@ -111,31 +111,45 @@ def get_messages(request):
     chat_id = request.GET.get('chat_id')
     chat = get_object_or_404(Chat, id=chat_id)
     messages = chat.messages.all().order_by('timestamp')
-    mountain_tz = pytz.timezone("America/Denver")  # Mountain Time (with DST adjustments)
-    message_data = [
-        {
+    
+    mountain_tz = pytz.timezone("America/Denver")
+    message_data = []
+    for msg in messages:
+        msg_data = {
+            "id": msg.id,  # So we can track the last message
             "sender": msg.sender.username,
             "content": msg.content,
-            "timestamp": timezone.localtime(msg.timestamp, mountain_tz).strftime("%Y-%m-%d %H:%M:%S")
+            "timestamp": timezone.localtime(msg.timestamp, mountain_tz).strftime("%Y-%m-%d %H:%M:%S"),
+            "image": msg.image.url if msg.image else ""
         }
-        for msg in messages
-    ]
+        message_data.append(msg_data)
+    
     return JsonResponse({"messages": message_data})
 
 
-@csrf_exempt
+
+
 @login_required
 def send_message(request, chat_id):
     if request.method == "POST":
-        chat = Chat.objects.get(id=chat_id)
-        content = request.POST.get("message_content")
+        chat = get_object_or_404(Chat, id=chat_id)
+        content = request.POST.get("message", "").strip()
+        image = request.FILES.get("image")  # Retrieve the uploaded image, if any
         
-        if content.strip():  # Avoid empty messages
-            Message.objects.create(chat=chat, sender=request.user, content=content)
+        # Debug: Uncomment the next line to see what files are being uploaded.
+        # print("Uploaded files:", request.FILES)
+        
+        if content or image:
+            Message.objects.create(
+                chat=chat,
+                sender=request.user,
+                content=content,
+                image=image
+            )
+        return redirect("chat_detail", chat_id=chat.id)
+    return redirect("chat_detail", chat_id=chat.id)
 
-        return redirect("chat_detail", chat_id=chat_id)  # ✅ Redirect instead of JSON response
 
-    return redirect("chat_detail", chat_id=chat_id)
 
 @login_required
 def profile_view(request):
@@ -268,3 +282,9 @@ def update_profile_picture(request):
         form = ProfilePictureForm(instance=profile)
     return render(request, "forum/update_profile_picture.html", {"form": form})
 
+@login_required
+def test_upload(request):
+    if request.method == "POST":
+        print("Uploaded files:", request.FILES)  # Check your console for output
+        return redirect("home")
+    return render(request, "forum/test_upload.html")

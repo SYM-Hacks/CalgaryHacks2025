@@ -41,14 +41,16 @@ class Chat(models.Model):
         return f"Chat between {self.user1} and {self.user2}"
 
 class Message(models.Model):
-    # Allow null to avoid the need for a one-off default during migration.
     chat = models.ForeignKey(Chat, related_name="messages", on_delete=models.CASCADE, null=True, blank=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(blank=True)
+    image = models.ImageField(upload_to='message_images/', blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.sender.username}: {self.content}"
+        return f"{self.sender.username}: {self.content or '[Image]'}"
+
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

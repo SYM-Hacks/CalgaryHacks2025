@@ -36,7 +36,7 @@ nav {
 }
 
 .btn {
-    background: #007bff;
+    background: #dc3545;  /* red */
     color: white;
     padding: 10px 15px;
     text-decoration: none;
@@ -44,7 +44,7 @@ nav {
 }
 
 .btn:hover {
-    background: #0056b3;
+    background: #c82333;  /* darker red */
 }
 
 /* Login Page */
@@ -148,7 +148,7 @@ nav {
     width: 100%;
     padding: 12px;
     font-size: 16px;
-    background-color: #007bff;
+    background-color: #dc3545;  /* red */
     color: white;
     border: none;
     border-radius: 5px;
@@ -156,7 +156,7 @@ nav {
 }
 
 .chat-form button:hover {
-    background-color: #0056b3;
+    background-color: #c82333;  /* darker red */
 }
 
 /* Align Back to Messages button */
@@ -165,4 +165,24 @@ nav {
     text-align: center;
     margin-top: 10px;
     width: 100%;
+}
+
+/* Override Bootstrap button styles */
+a.btn, button.btn {
+    background-color: #dc3545 !important;
+    border: 1px solid #dc3545 !important;
+    color: white !important;
+}
+
+a.btn:hover, button.btn:hover,
+a.btn:focus, button.btn:focus {
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+}
+
+.message-image {
+    display: block;      
+    max-width: 400px;     
+    margin-bottom: 5px;
+    border-radius: 5px;
 }

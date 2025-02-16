@@ -1,11 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Profile Picture</title>
     <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+    <style>
+        .button-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -13,9 +20,12 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn">Update Picture</button>
+            <div class="button-group">
+                <button type="submit" class="btn">Update Picture</button>
+                <a href="{% url 'profile' %}" class="btn btn-secondary">Back to Profile</a>
+            </div>
         </form>
-        <a href="{% url 'profile' %}" class="btn">Back to Profile</a>
     </div>
+    <script src="{% static 'forum/script.js' %}"></script>
 </body>
 </html>
