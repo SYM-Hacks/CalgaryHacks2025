@@ -24,7 +24,7 @@ def login_view(request):
             return redirect('home')  # Redirect to home page after login
     else:
         form = AuthenticationForm()
-    return render(request, 'forum/login.html', {'form': form})
+    return render(request, 'registration/login.html', {'form': form})
 
 
 @login_required
