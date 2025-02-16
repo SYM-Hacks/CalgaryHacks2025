@@ -41,7 +41,10 @@ nav {
     padding: 10px 15px;
     text-decoration: none;
     border-radius: 5px;
+    text-align: center !important;
+    display: inline-block;  
 }
+
 
 .btn:hover {
     background: #c82333;  /* darker red */

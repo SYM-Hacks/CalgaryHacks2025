@@ -14,27 +14,15 @@
             margin-top: 10px;
             border-radius: 8px;
         }
-        /* Comment styles */
-        .comment {
-            border-top: 1px solid #ddd;
-            padding: 5px 0;
-            margin-top: 10px;
-        }
-        .comment p {
-            margin: 0;
-        }
-        .comment small {
-            color: #555;
-        }
-        .comment-form {
-            margin-top: 10px;
-        }
-        /* (Reuse your header styling from before) */
+        /* Header layout: image on left, title in center, vertical nav on right */
         .header-main {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
+        }
+        .header-left {
+            flex: 0 0 auto;
         }
         .header-left img {
             width: 80px;
@@ -57,11 +45,15 @@
             flex-direction: column;
             gap: 10px;
         }
+        /* Force the button text to be centered */
+        .nav-vertical a.btn {
+            text-align: center !important;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header layout -->
+        <!-- Three-column header layout -->
         <header class="header-main">
             <div class="header-left">
                 <img src="{% static 'forum/community.png' %}" alt="Community Logo">
@@ -133,7 +125,7 @@
                         in <strong>{{ post.category.name }}</strong> 
                         on {{ post.created_at }}
                     </small>
-
+                    
                     <!-- Like Toggle Button -->
                     <div style="margin-top:10px;">
                         {% if post.has_liked %}
@@ -142,27 +134,6 @@
                             <a href="{% url 'like_post' post.id %}" class="btn btn-secondary">Like</a>
                         {% endif %}
                         <small>({{ post.like_set.count }} likes)</small>
-                    </div>
-
-                    <!-- Display Comments -->
-                    <div class="comments">
-                        {% for comment in post.comments.all %}
-                            <div class="comment">
-                                <p>{{ comment.content }}</p>
-                                <small>By {{ comment.user.username }} on {{ comment.created_at }}</small>
-                            </div>
-                        {% empty %}
-                            <p>No comments yet.</p>
-                        {% endfor %}
-                    </div>
-
-                    <!-- Comment Form -->
-                    <div class="comment-form">
-                        <form method="POST" action="{% url 'add_comment' post.id %}">
-                            {% csrf_token %}
-                            <input type="text" name="comment" placeholder="Add a comment..." required>
-                            <button type="submit" class="btn btn-secondary">Comment</button>
-                        </form>
                     </div>
                 </div>
             {% empty %}
