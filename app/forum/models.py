@@ -21,10 +21,12 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=get_default_category)
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)  # New field for post image
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.title} - {self.category.name}"
+
 
 class Chat(models.Model):
     user1 = models.ForeignKey(User, related_name='chats_as_user1', on_delete=models.CASCADE)
@@ -51,6 +53,8 @@ class Message(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
+    profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+

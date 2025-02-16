@@ -22,6 +22,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LoginView
 from forum.views import home, signup
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +32,5 @@ urlpatterns = [
     path('', home, name='home'),  # Home is now protected (only logged-in users can access)
     path('accounts/', include('django.contrib.auth.urls')),  # Default auth system
     path('', include('forum.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

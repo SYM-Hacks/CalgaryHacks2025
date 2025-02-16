@@ -20,4 +20,5 @@ urlpatterns = [
     path('create_post/', create_post, name='create_post'),
     path('profile/<int:user_id>/', views.user_profile, name='user_profile'),
     path('api/get_chat_messages/', views.get_messages, name='get_chat_messages'),
+    path('profile/update_picture/', views.update_profile_picture, name='update_profile_picture'),
 ]

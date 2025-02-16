@@ -6,7 +6,7 @@
     <title>Home - Community</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
-    </head>
+</head>
 <body>
     <div class="container">
         <header>
@@ -32,7 +32,7 @@
             <nav>
                 <a href="{% url 'home' %}" class="btn">All Admin Posts</a>
                 {% for category in categories %}
-                    <a href="?category={{ category.name }}" class="btn">{{ category.name }}</a>
+                    <a href="{% url 'posts' %}?category={{ category.name }}" class="btn">{{ category.name }}</a>
                 {% endfor %}
             </nav>
         </section>
@@ -48,7 +48,7 @@
                         Posted by 
                         <strong>
                             <a href="{% url 'user_profile' post.user.id %}">
-                                {{ post.user.username}}
+                                {{ post.user.username }}
                             </a>
                         </strong>
                         in <strong>{{ post.category.name }}</strong> 

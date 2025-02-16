@@ -9,6 +9,8 @@ import json
 from django.contrib.auth.models import User
 from django.utils import timezone
 import pytz
+from .forms import ProfilePictureForm
+
 
 def signup(request):
     if request.method == "POST":
@@ -61,6 +63,7 @@ def create_post(request):
         title = request.POST.get('title')
         content = request.POST.get('content')
         category_id = request.POST.get('category')
+        image = request.FILES.get('image')  # Get the uploaded image if provided
 
         try:
             category = Category.objects.get(id=category_id)
@@ -68,11 +71,18 @@ def create_post(request):
             category = None
 
         if category:
-            Post.objects.create(user=request.user, title=title, content=content, category=category)
+            Post.objects.create(
+                user=request.user,
+                title=title,
+                content=content,
+                category=category,
+                image=image  # Save the image (or None if not provided)
+            )
             return redirect('posts')
 
     categories = Category.objects.all()
     return render(request, 'forum/post.html', {'categories': categories})
+
 
 
 
@@ -129,7 +139,11 @@ def send_message(request, chat_id):
 @login_required
 def profile_view(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
-    return render(request, 'forum/profile.html', {'bio': profile.bio})
+    return render(request, 'forum/profile.html', {
+        'profile': profile,
+        'bio': profile.bio,
+    })
+
 
 
 @login_required
@@ -239,3 +253,17 @@ def user_profile(request, user_id):
         'user_obj': user_obj,
         'profile': profile,
     })
+
+@login_required
+def update_profile_picture(request):
+    # Get or create the profile for the current user
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    if request.method == "POST":
+        form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # or wherever you want to redirect
+    else:
+        form = ProfilePictureForm(instance=profile)
+    return render(request, "forum/update_profile_picture.html", {"form": form})
+

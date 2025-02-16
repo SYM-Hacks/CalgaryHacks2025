@@ -23,12 +23,20 @@
         .bio-edit {
             display: none; /* Initially hidden */
         }
+        /* Additional styling for profile container */
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .profile-nav .btn {
+            margin-right: 10px;
+        }
     </style>
     <script>
         function toggleBioEdit() {
             var displayDiv = document.getElementById('bio-display');
             var editDiv = document.getElementById('bio-edit');
-
             if (editDiv.style.display === 'none' || editDiv.style.display === '') {
                 editDiv.style.display = 'block';
                 displayDiv.style.display = 'none';
@@ -46,15 +54,18 @@
         </header>
 
         <section class="profile-info">
-            <!-- Default profile picture -->
-            <img src="{% static 'forum/dif.jpg' %}" alt="Profile Picture" class="profile-pic">
+            <!-- Display the user's profile picture if available, else a default -->
+            {% if profile.profile_pic %}
+                <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
+            {% else %}
+                <img src="{% static 'forum/dif.jpg' %}" alt="Default Profile Picture" class="profile-pic">
+            {% endif %}
             <!-- Display the logged-in user's username -->
             <h2>{{ request.user.username }}</h2>
         </section>
 
         <section class="bio-section">
             <h3>Bio</h3>
-
             <!-- Display Mode -->
             <div id="bio-display" class="bio-display">
                 {% if bio %}
@@ -62,11 +73,9 @@
                 {% else %}
                     <p>You haven't added a bio yet.</p>
                 {% endif %}
-                <button type="button" class="btn" onclick="toggleBioEdit()">Edit</button>
-                <br>
-                <br>
+                <button type="button" class="btn" onclick="toggleBioEdit()">Edit Bio</button>
+                <br><br>
             </div>
-
             <!-- Edit Mode -->
             <div id="bio-edit" class="bio-edit">
                 <form method="post" action="{% url 'update_bio' %}" onsubmit="setTimeout(function() { window.location.reload(); }, 500);">
@@ -80,6 +89,8 @@
         </section>
 
         <nav class="profile-nav">
+            <!-- Link to update profile picture -->
+            <a href="{% url 'update_profile_picture' %}" class="btn">Change Profile Picture</a>
             <!-- Logout button -->
             <a href="{% url 'logout' %}" class="btn">Logout</a>
             <!-- Back to Home button -->

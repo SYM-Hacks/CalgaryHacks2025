@@ -1,7 +1,7 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <title>{{ user_obj.username }}'s Profile - Community</title>
     <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
@@ -30,8 +30,11 @@
             <h1>{{ user_obj.username }}'s Profile</h1>
         </header>
         <section class="profile-info">
-            <!-- You can optionally include a profile picture here -->
-            <img src="{% static 'forum/dif.jpg' %}" alt="Profile Picture" class="profile-pic">
+            {% if profile.profile_pic %}
+                <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
+            {% else %}
+                <img src="{% static 'forum/dif.jpg' %}" alt="Default Profile Picture" class="profile-pic">
+            {% endif %}
             <h2>{{ user_obj.username }}</h2>
             <p>{{ profile.bio|default:"No bio available." }}</p>
         </section>

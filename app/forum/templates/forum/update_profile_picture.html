@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile Picture</title>
+    <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Update Your Profile Picture</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn">Update Picture</button>
+        </form>
+        <a href="{% url 'profile' %}" class="btn">Back to Profile</a>
+    </div>
+</body>
+</html>
