@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Community</title>
@@ -15,7 +16,7 @@
 
         <section class="profile-info">
             <!-- Default profile picture -->
-            <img src="dif.jpg" alt="Default Profile Picture" class="profile-pic">
+            <img src="{% static 'dif.jpg' %}" alt="Default Profile Picture" class="profile-pic">
             <!-- Display the logged-in user's username -->
             <h2>{{ request.user.username }}</h2>
         </section>
