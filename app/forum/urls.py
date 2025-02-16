@@ -9,6 +9,7 @@ urlpatterns = [
     path('posts/', posts_view, name='posts'),
     path('messages/', messaging_view, name='messages'),
     path('profile/', profile_view, name='profile'),
-
+    path('api/get_messages/', get_messages, name='get_messages'),
+    path('api/send_message/', send_message, name='send_message'),
 ]
 
