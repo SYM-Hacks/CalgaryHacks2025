@@ -14,17 +14,59 @@
             margin-top: 10px;
             border-radius: 8px;
         }
+        /* Header layout: image on left, title in center, vertical nav on right */
+        .header-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .header-left {
+            flex: 0 0 auto;
+        }
+        .header-left img {
+            width: 80px;
+            height: auto;
+        }
+        .header-center {
+            flex: 1 1 auto;
+            text-align: center;
+        }
+        .header-center h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .header-right {
+            flex: 0 0 auto;
+            text-align: right;
+        }
+        .nav-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .nav-vertical a.btn {
+            text-align: center; /* center text within the buttons */
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Community Posts</h1>
-            <nav>
-                <a href="{% url 'home' %}" class="btn">Home</a>
-                <a href="{% url 'messages' %}" class="btn">Messages</a>
-                <a href="{% url 'profile' %}" class="btn">Profile</a>
-            </nav>
+        <!-- Three-column header layout -->
+        <header class="header-main">
+            <div class="header-left">
+                <img src="{% static 'forum/community.png' %}" alt="Community Logo">
+            </div>
+            <div class="header-center">
+                <h1>Community Posts</h1>
+            </div>
+            <div class="header-right">
+                <nav class="nav-vertical">
+                    <a href="{% url 'home' %}" class="btn">Home</a>
+                    <a href="{% url 'messages' %}" class="btn">Messages</a>
+                    <a href="{% url 'profile' %}" class="btn">Profile</a>
+                </nav>
+            </div>
         </header>
 
         <!-- Category Filter -->
@@ -80,13 +122,12 @@
                         </strong>
                         in <strong>{{ post.category.name }}</strong> 
                         on {{ post.created_at }}
-                    </small>                    
+                    </small>
                 </div>
             {% empty %}
                 <p>No posts yet in this category. Be the first to share something!</p>
             {% endfor %}
         </section>
-
     </div>
 </body>
 </html>

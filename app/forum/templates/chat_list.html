@@ -6,53 +6,96 @@
     <title>Your Chats</title>
     <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
     <style>
-        .header-container {
+        /* Header layout: image on left, title in center, vertical nav on right */
+        .header-main {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
-        .chat-entry {
-            margin-bottom: 10px;
+        .header-left {
+            flex: 0 0 auto;
         }
-        .btn {
-            padding: 10px 15px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 5px;
+        .header-left img {
+            width: 80px;
+            height: auto;
+        }
+        .header-center {
+            flex: 1 1 auto;
+            text-align: center;
+        }
+        .header-center h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .header-right {
+            flex: 0 0 auto;
+            text-align: right;
+        }
+        .nav-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .nav-vertical a.btn {
+            text-align: center; /* center text within buttons */
+        }
+
+        /* Center chat list below */
+        .chat-container {
+            text-align: center;
+        }
+        .chat-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto; /* centers the list, with extra top margin */
+            display: inline-block;
+        }
+        .chat-list li {
+            margin-bottom: 15px; /* spacing between each chat button */
         }
         .action-buttons {
-            margin-top: 20px;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header: Title on left, "Back to Home" on right -->
-        <div class="header-container">
-            <h1>Your Chats</h1>
-            <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
-        </div>
+        <!-- Header: logo on left, "Your Chats" centered, vertical nav on right -->
+        <header class="header-main">
+            <div class="header-left">
+                <img src="{% static 'forum/community.png' %}" alt="Community Logo">
+            </div>
+            <div class="header-center">
+                <h1>Your Chats</h1>
+            </div>
+            <div class="header-right">
+                <nav class="nav-vertical">
+                    <a href="{% url 'home' %}" class="btn">Home</a>
+                    <a href="{% url 'profile' %}" class="btn">Profile</a>
+                </nav>
+            </div>
+        </header>
 
-        <!-- If user has existing chats, list them; otherwise show "No chats found." -->
-        {% if chats %}
-            <ul>
-                {% for chat in chats %}
-                    <li class="chat-entry">
-                        <!-- Link to the detail page for this chat -->
-                        <a href="{% url 'chat_detail' chat.id %}" class="btn btn-outline-primary">
-                            Chat with {{ chat.other_user.username }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No chats found.</p>
-        {% endif %}
+        <div class="chat-container">
+            {% if chats %}
+                <ul class="chat-list">
+                    {% for chat in chats %}
+                        <li>
+                            <a href="{% url 'chat_detail' chat.id %}" class="btn">
+                                Chat with {{ chat.other_user.username }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No chats found.</p>
+            {% endif %}
 
-        <!-- "Start a New Chat" button to go to create_chat page -->
-        <div class="action-buttons">
-            <a href="{% url 'create_chat' %}" class="btn btn-primary">Start a New Chat</a>
+            <!-- "Start a New Chat" button -->
+            <div class="action-buttons">
+                <a href="{% url 'create_chat' %}" class="btn">Start a New Chat</a>
+            </div>
         </div>
     </div>
 </body>
