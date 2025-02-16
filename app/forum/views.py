@@ -49,10 +49,10 @@ def posts_view(request):
         if title and content:
             Post.objects.create(title=title, content=content, author=author)
 
-        return redirect("posts")  # Redirect after posting
+        return redirect("posts")  # Redirect after poçsting
 
     # Fetch all posts to display
-    posts = Post.objects.all().order_by("-timestamp")  # Ensure posts are retrieved
+    posts = Post.objects.all().order_by("-created_at")  # ✅ Fix: Use the correct field name
     return render(request, "forum/posts.html", {"posts": posts})
 
 
