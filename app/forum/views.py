@@ -27,6 +27,11 @@ def login_view(request):
     return render(request, 'registration/login.html', {'form': form})
 
 
+def profile_view(request):
+    # You can pass additional context if needed, here we're just using request.user
+    return render(request, 'forum/profile.html')
+
+
 @login_required
 def logout_view(request):
     logout(request)
