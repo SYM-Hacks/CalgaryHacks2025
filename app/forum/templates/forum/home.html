@@ -15,12 +15,46 @@
                 <a href="{% url 'posts' %}" class="btn">View Posts</a>
                 <a href="{% url 'messages' %}" class="btn">Messages</a>
                 <a href="{% url 'profile' %}" class="btn">Profile</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="btn">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn">Login</a>
+                {% endif %}
             </nav>                       
         </header>
 
         <section class="intro">
             <p>Join discussions, share your thoughts, and connect with like-minded people.</p>
         </section>
+
+        <!-- Category Filter -->
+        <section class="category-filter">
+            <h2>Browse by Category:</h2>
+            <nav>
+                <a href="{% url 'home' %}" class="btn">All Posts</a>
+                {% for category in categories %}
+                    <a href="?category={{ category.name }}" class="btn">{{ category.name }}</a>
+                {% endfor %}
+            </nav>
+        </section>
+
+        <!-- Recent Posts Preview -->
+        <section class="recent-posts">
+            <h2>Recent Posts</h2>
+            {% for post in posts|slice:":5" %}
+                <div class="post-preview">
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.content|truncatewords:20 }}</p>
+                    <small>Posted by <strong>{{ post.user.username }}</strong> in <strong>{{ post.category.name }}</strong> on {{ post.created_at }}</small>
+                    <br>
+                    <br>
+                    <a href="{% url 'posts' %}" class="btn">Read More</a>
+                </div>
+            {% empty %}
+                <p>No posts available. Start the conversation by creating one!</p>
+            {% endfor %}
+        </section>
+
     </div>
     <script src="{% static 'forum/script.js' %}"></script>
 </body>
