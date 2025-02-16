@@ -111,3 +111,58 @@ nav {
 .message-form button {
     flex-shrink: 0;
 }
+
+.form-section {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.chat-form label {
+    font-weight: bold;
+}
+
+.chat-form input[type="text"],
+.chat-form select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.chat-form select {
+    height: 150px; /* Adjusts the height of the participant selection box */
+}
+
+.chat-form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Align Back to Messages button */
+.form-section a.btn-secondary {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    width: 100%;
+}

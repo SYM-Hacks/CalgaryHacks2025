@@ -10,64 +10,34 @@
 <body>
     <div class="container">
         <header>
-            <h1>Messaging</h1>
+            <h1>Messages</h1>
             <nav>
-                <a href="{% url 'home' %}" class="btn">Home</a>
                 <a href="{% url 'posts' %}" class="btn">View Posts</a>
-                <a href="{% url 'profile' %}" class="btn">Profile</a>
-            </nav>
+                <a href="{% url 'home' %}" class="btn">Home</a>
+                <a href="{% url 'logout' %}" class="btn">Logout</a>
+            </nav>                       
         </header>
-        
-        <section class="messages">
-            <h2>Chat with Community Members</h2>
-            <div class="chat-box" id="chat-box">
-                {% for message in messages %}
-                    <p><strong>{{ message.sender.username }}:</strong> {{ message.content }}</p>
+
+        <section class="intro">
+            <p>View and manage your conversations.</p>
+        </section>
+
+        <section class="messages-list">
+            <h2>Your Chats</h2>
+            <ul>
+                {% for chat in chats %}
+                    <li>
+                        <a href="{% url 'private_chat' chat.id %}" class="chat-link">
+                            {{ chat.name|default:chat.participants.all|join:", " }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <p>No active chats. <a href="{% url 'get_or_create_chat' request.user.id %}" class="btn">Start a New Chat</a></p>
                 {% endfor %}
-            </div>
-            
-            <form method="POST" class="message-form" id="message-form">
-                {% csrf_token %}
-                <input type="text" name="message" id="message-input" placeholder="Type your message..." required>
-                <button type="submit" class="btn">Send</button>
-            </form>
+            </ul>
         </section>
     </div>
-
-    <script>
-        function fetchMessages() {
-            fetch("{% url 'get_messages' %}") // Replace with your actual view name
-                .then(response => response.json())
-                .then(data => {
-                    let chatBox = document.getElementById('chat-box');
-                    chatBox.innerHTML = '';
-                    data.messages.forEach(msg => {
-                        chatBox.innerHTML += `<p><strong>${msg.sender}:</strong> ${msg.content}</p>`;
-                    });
-                });
-        }
-
-        document.getElementById("message-form").addEventListener("submit", function(event) {
-            event.preventDefault();
-            let messageInput = document.getElementById("message-input").value;
-            
-            fetch("{% url 'send_message' %}", { // Replace with your actual send message view
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({ message: messageInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("message-input").value = "";
-                fetchMessages(); // Refresh messages
-            });
-        });
-
-        setInterval(fetchMessages, 1000); // Fetch messages every second
-    </script>
-
+    
+    <script src="{% static 'forum/script.js' %}"></script>
 </body>
 </html>

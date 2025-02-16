@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Chat</title>
+    <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chat with {{ other_user.username }}</h1>
+            <nav>
+                <a href="{% url 'messages' %}" class="btn">Back to User List</a>
+            </nav>
+        </header>
+
+        <section class="chat-box" style="height: 300px; overflow-y: auto;">
+            {% for message in messages %}
+                <div 
+                    class="{% if message.sender == request.user %}text-end{% else %}text-start{% endif %}"
+                    style="margin-bottom: 10px;"
+                >
+                    <strong>{{ message.sender.username }}</strong>:
+                    <span>{{ message.content }}</span>
+                    <small class="text-muted" style="display: block;">{{ message.timestamp }}</small>
+                </div>
+            {% endfor %}
+        </section>
+
+        <section class="message-form">
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="message" placeholder="Type a message..." required>
+                <button class="btn" type="submit">Send</button>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

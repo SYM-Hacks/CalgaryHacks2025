@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Your Chats</title>
+    <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+    <style>
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .chat-entry {
+            margin-bottom: 10px;
+        }
+        .btn {
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .action-buttons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header: Title on left, "Back to Home" on right -->
+        <div class="header-container">
+            <h1>Your Chats</h1>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+        </div>
+
+        <!-- If user has existing chats, list them; otherwise show "No chats found." -->
+        {% if chats %}
+            <ul>
+                {% for chat in chats %}
+                    <li class="chat-entry">
+                        <!-- Link to the detail page for this chat -->
+                        <a href="{% url 'chat_detail' chat.id %}" class="btn btn-outline-primary">
+                            Chat with {{ chat.other_user.username }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No chats found.</p>
+        {% endif %}
+
+        <!-- "Start a New Chat" button to go to create_chat page -->
+        <div class="action-buttons">
+            <a href="{% url 'create_chat' %}" class="btn btn-primary">Start a New Chat</a>
+        </div>
+    </div>
+</body>
+</html>

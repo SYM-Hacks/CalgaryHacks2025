@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Select a User to Chat With</h1>
+<ul>
+    {% for user in users %}
+        <li>
+            <a href="{% url 'get_or_create_chat' user.id %}" class="btn btn-primary">
+                Chat with {{ user.username }}
+            </a>
+        </li>
+    {% empty %}
+        <li>No other users found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

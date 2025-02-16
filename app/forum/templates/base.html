@@ -1,0 +1,32 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Forum{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>My Forum</h1>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <!-- "Messages" now goes to our 'messages' named route, which calls user_list -->
+            <a href="{% url 'messages' %}" class="btn">Messages</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 My Forum</p>
+    </footer>
+</body>
+</html>

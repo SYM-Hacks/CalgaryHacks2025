@@ -1,11 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Post, Message  # Import Message model
+from .models import Post, Message, Chat
+from django.contrib.auth.models import User
+
 
 def signup(request):
     if request.method == "POST":
@@ -71,20 +73,126 @@ def get_messages(request):
     message_data = [{"sender": msg.sender.username, "content": msg.content} for msg in messages]
     return JsonResponse({"messages": message_data})
 
-@csrf_exempt
-@login_required
-def send_message(request):
-    """Handle new message submissions"""
+def send_message(request, chat_id):
     if request.method == "POST":
-        data = json.loads(request.body)
-        message_content = data.get("message", "").strip()
+        chat = Chat.objects.get(id=chat_id)
+        content = request.POST.get("message_content")
+        
+        if content.strip():  # Avoid empty messages
+            Message.objects.create(chat=chat, sender=request.user, content=content)
 
-        if message_content:
-            message = Message.objects.create(sender=request.user, content=message_content)
-            return JsonResponse({"status": "success", "message": message.content})
+        return redirect("chat_detail", chat_id=chat_id)  # ✅ Redirect instead of JSON response
 
-    return JsonResponse({"status": "error", "message": "Invalid request"}, status=400)
+    return redirect("chat_detail", chat_id=chat_id)
+
 @login_required
 def profile_view(request):
     # You can pass additional context if needed, here we're just using request.user
     return render(request, 'forum/profile.html')
+
+@login_required
+def chat_list(request):
+    # Get all chats where the current user is either user1 or user2
+    chats = Chat.objects.filter(user1=request.user) | Chat.objects.filter(user2=request.user)
+
+    # Attach the "other_user" attribute to each chat
+    for chat in chats:
+        chat.other_user = chat.get_other_user(request.user)
+
+    return render(request, "chat_list.html", {"chats": chats})
+
+@login_required
+def get_or_create_chat(request, user_id):
+    user2 = get_object_or_404(User, id=user_id)
+
+    # Ensure we don't create duplicate chats
+    chat = Chat.objects.filter(user1=request.user, user2=user2).first() or \
+           Chat.objects.filter(user1=user2, user2=request.user).first()
+
+    if not chat:
+        chat = Chat.objects.create(user1=request.user, user2=user2)
+
+    return redirect("chat_detail", chat_id=chat.id)
+
+
+@login_required
+def chat_detail(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+    if request.user not in [chat.user1, chat.user2]:
+        return redirect("messages")
+    messages = chat.messages.all().order_by("timestamp")
+    if request.method == "POST":
+        content = request.POST.get("message", "").strip()
+        if content:
+            Message.objects.create(chat=chat, sender=request.user, content=content)
+        return redirect("chat_detail", chat_id=chat.id)
+    return render(request, "chat_detail.html", {
+        "chat": chat,
+        "messages": messages,
+        "other_user": chat.get_other_user(request.user),
+    })
+
+
+
+def send_message(request, chat_id):
+    """Handle sending a new message"""
+    if request.method == "POST":
+        chat = get_object_or_404(Chat, id=chat_id)
+
+        # Ensure the user is a participant in the chat
+        if request.user not in chat.participants.all():
+            return redirect("messages")
+
+        content = request.POST.get("message_content", "").strip()
+
+        if content:
+            Message.objects.create(chat=chat, sender=request.user, content=content)
+
+        return redirect("chat_detail", chat_id=chat.id)  # ✅ Redirect back to chat
+
+@login_required
+def messages_view(request, user_id=None):
+    if user_id:
+        # Get or create a chat between two users
+        other_user = get_object_or_404(User, id=user_id)
+        chat, created = Chat.objects.get_or_create(
+            participants__in=[request.user, other_user],
+            defaults={"name": None},
+        )
+        chat.participants.add(request.user, other_user)  # Ensure both users are in chat
+    else:
+        chat = None
+
+    chats = request.user.chats.all()  # Get all chats for user
+    return render(request, "forum/messages.html", {"chats": chats, "active_chat": chat})
+
+@login_required
+def user_list(request):
+    # Exclude the currently logged-in user, so they only see others
+    users = User.objects.exclude(id=request.user.id)
+    return render(request, "forum/user_list.html", {"users": users})
+
+
+@login_required
+def create_chat_view(request):
+    if request.method == "GET":
+        # Show a form to select another user
+        users = User.objects.exclude(id=request.user.id)
+        return render(request, "create_chat.html", {"users": users})
+
+    if request.method == "POST":
+        user_id = request.POST.get("user_id")
+        other_user = get_object_or_404(User, id=user_id)
+
+        # Check if chat already exists for these two users
+        chat = Chat.objects.filter(
+            user1__in=[request.user, other_user],
+            user2__in=[request.user, other_user]
+        ).first()
+
+        if not chat:
+            # If no existing chat, create a new one
+            chat = Chat.objects.create(user1=request.user, user2=other_user)
+
+        # Redirect to the chat_detail page
+        return redirect("chat_detail", chat_id=chat.id)
