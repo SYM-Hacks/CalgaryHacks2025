@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .models import Post, Category
 import json
 from .models import Post, Message  # Import Message model
 
@@ -37,8 +38,29 @@ def logout_view(request):
 
 @login_required
 def home(request):
-    posts = Post.objects.all()
-    return render(request, 'forum/home.html', {'posts': posts})
+    category_filter = request.GET.get('category', None)
+    
+    if category_filter:
+        posts = Post.objects.filter(category__name=category_filter)
+    else:
+        posts = Post.objects.all()
+    
+    categories = Category.objects.all()  # Get all categories for filtering
+    return render(request, 'forum/home.html', {'posts': posts, 'categories': categories})
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        category_id = request.POST.get('category')
+        category = Category.objects.get(id=category_id)
+
+        Post.objects.create(user=request.user, title=title, content=content, category=category)
+        return redirect('/')
+
+    categories = Category.objects.all()
+    return render(request, 'forum/create_post.html', {'categories': categories})
 
 @login_required
 def posts_view(request):
