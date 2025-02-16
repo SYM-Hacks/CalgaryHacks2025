@@ -12,10 +12,10 @@
         <header>
             <h1>Welcome to the Community</h1>
             <nav>
-                <a href="posts.html" class="btn">View Posts</a>
-                <a href="messaging.html" class="btn">Messages</a>
-                <a href="login.html" class="btn">Logout</a>
-            </nav>
+                <a href="{% url 'posts' %}" class="btn">View Posts</a>
+                <a href="{% url 'messages' %}" class="btn">Messages</a>
+                <a href="{% url 'logout' %}" class="btn">Logout</a>
+            </nav>            
         </header>
 
         <section class="intro">

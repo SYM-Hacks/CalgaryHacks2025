@@ -12,9 +12,9 @@
         <header>
             <h1>Messaging</h1>
             <nav>
-                <a href="home.html" class="btn">Home</a>
-                <a href="posts.html" class="btn">Posts</a>
-                <a href="login.html" class="btn">Logout</a>
+                <a href="{% url 'home' %}" class="btn">Home</a>
+                <a href="{% url 'posts' %}" class="btn">View Posts</a>
+                <a href="{% url 'login' %}" class="btn">Logout</a>
             </nav>
         </header>
         
