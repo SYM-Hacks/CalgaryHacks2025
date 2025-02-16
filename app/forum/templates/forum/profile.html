@@ -2,11 +2,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Community</title>
     <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+    <style>
+        /* Resize the profile picture and make it circular */
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .bio-section {
+            margin-top: 20px;
+        }
+        .bio-display, .bio-edit {
+            margin-top: 10px;
+        }
+        .bio-edit {
+            display: none;
+        }
+    </style>
+    <script>
+        function toggleBioEdit() {
+            var displayDiv = document.getElementById('bio-display');
+            var editDiv = document.getElementById('bio-edit');
+            if (editDiv.style.display === 'none') {
+                editDiv.style.display = 'block';
+                displayDiv.style.display = 'none';
+            } else {
+                editDiv.style.display = 'none';
+                displayDiv.style.display = 'block';
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container profile-container">
@@ -16,9 +46,33 @@
 
         <section class="profile-info">
             <!-- Default profile picture -->
-            <img src="{% static 'dif.jpg' %}" alt="Default Profile Picture" class="profile-pic">
+            <img src="{% static 'forum/dif.jpg' %}" alt="Profile Picture" class="profile-pic">
             <!-- Display the logged-in user's username -->
             <h2>{{ request.user.username }}</h2>
+        </section>
+
+        <section class="bio-section">
+            <h3>Your Bio</h3>
+            <!-- Display Mode -->
+            <div id="bio-display" class="bio-display">
+                {% if bio %}
+                    <p>{{ bio }}</p>
+                {% else %}
+                    <p>You haven't added a bio yet.</p>
+                {% endif %}
+                <button type="button" class="btn" onclick="toggleBioEdit()">Edit</button>
+            </div>
+
+            <!-- Edit Mode -->
+            <div id="bio-edit" class="bio-edit">
+                <form method="post" action="{% url 'update_bio' %}">
+                    {% csrf_token %}
+                    <textarea name="bio" rows="4" placeholder="Enter your bio...">{{ bio }}</textarea>
+                    <br>
+                    <button type="submit" class="btn">Save</button>
+                    <button type="button" class="btn" onclick="toggleBioEdit()">Cancel</button>
+                </form>
+            </div>
         </section>
 
         <nav class="profile-nav">

@@ -30,3 +30,12 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{self.sender.username}: {self.content}"
+    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True)  # Bio field; can be empty
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+    
+    
