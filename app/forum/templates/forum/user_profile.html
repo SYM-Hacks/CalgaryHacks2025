@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>{{ user_obj.username }}'s Profile - Community</title>
+    <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+    <style>
+        /* Resize the profile picture and make it circular */
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .bio-section {
+            margin-top: 20px;
+        }
+        .bio-display, .bio-edit {
+            margin-top: 10px;
+        }
+        .bio-edit {
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+    <div class="container profile-container">
+        <header>
+            <h1>{{ user_obj.username }}'s Profile</h1>
+        </header>
+        <section class="profile-info">
+            <!-- You can optionally include a profile picture here -->
+            <img src="{% static 'forum/dif.jpg' %}" alt="Profile Picture" class="profile-pic">
+            <h2>{{ user_obj.username }}</h2>
+            <p>{{ profile.bio|default:"No bio available." }}</p>
+        </section>
+        <nav class="profile-nav">
+            <a href="{% url 'home' %}" class="btn">Home</a>
+            {% if user_obj == request.user %}
+                <a href="{% url 'profile' %}" class="btn">Edit Your Profile</a>
+            {% endif %}
+        </nav>
+    </div>
+    <script src="{% static 'forum/script.js' %}"></script>
+</body>
+</html>

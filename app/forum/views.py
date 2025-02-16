@@ -8,6 +8,7 @@ from .models import Post, Category, Message, Profile, Chat
 import json
 from django.contrib.auth.models import User
 
+
 def signup(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -218,3 +219,12 @@ def create_chat_view(request):
 
         # Redirect to the chat_detail page
         return redirect("chat_detail", chat_id=chat.id)
+
+@login_required
+def user_profile(request, user_id):
+    user_obj = get_object_or_404(User, id=user_id)
+    profile, created = Profile.objects.get_or_create(user=user_obj)
+    return render(request, 'forum/user_profile.html', {
+        'user_obj': user_obj,
+        'profile': profile,
+    })

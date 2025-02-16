@@ -18,4 +18,5 @@ urlpatterns = [
     path("messages/", user_list, name="messages"),
     path('update-bio/', update_bio_view, name='update_bio'),
     path('create_post/', create_post, name='create_post'),
+    path('profile/<int:user_id>/', views.user_profile, name='user_profile'),
 ]
