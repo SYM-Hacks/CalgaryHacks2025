@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Post, Category,Message,Profile
 import json
-
+from django.contrib.auth.models import User
 
 
 
@@ -44,10 +44,14 @@ def logout_view(request):
 def home(request):
     category_filter = request.GET.get('category', None)
 
+    # Get admin users (staff or superusers)
+    admin_users = User.objects.filter(is_staff=True)  # Only staff/admin users
+
+    # Filter posts by admin users
     if category_filter:
-        posts = Post.objects.filter(category__name=category_filter)
+        posts = Post.objects.filter(user__in=admin_users, category__name=category_filter)
     else:
-        posts = Post.objects.all()
+        posts = Post.objects.filter(user__in=admin_users)  # Only admin posts
 
     categories = Category.objects.all()
     return render(request, 'forum/home.html', {'posts': posts, 'categories': categories})
