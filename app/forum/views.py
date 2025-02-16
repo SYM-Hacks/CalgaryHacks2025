@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Post, Category, Message, Profile, Chat
+from .models import Profile, Chat, Message, Post, Category, Like, Follow
 import json
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -85,19 +85,22 @@ def create_post(request):
     return render(request, 'forum/post.html', {'categories': categories})
 
 
-
-
 @login_required
 def posts_view(request):
     categories = Category.objects.all()
     category_filter = request.GET.get('category')
+
     if category_filter:
         posts = Post.objects.filter(category__name=category_filter).order_by("-created_at")
     else:
         posts = Post.objects.all().order_by("-created_at")
+
+    # For each post, determine if the current user has liked it
+    for p in posts:
+        p.has_liked = p.like_set.filter(user=request.user).exists()
+
+
     return render(request, "forum/posts.html", {"posts": posts, "categories": categories})
-
-
 
 
 @login_required
@@ -264,10 +267,25 @@ def create_chat_view(request):
 def user_profile(request, user_id):
     user_obj = get_object_or_404(User, id=user_id)
     profile, created = Profile.objects.get_or_create(user=user_obj)
-    return render(request, 'forum/user_profile.html', {
-        'user_obj': user_obj,
-        'profile': profile,
-    })
+
+    # If Follow model is:
+    # follower = models.ForeignKey(User, related_name='following')
+    # followed = models.ForeignKey(User, related_name='followers')
+    # Then to check if request.user is following user_obj:
+    is_following = False
+    if request.user.is_authenticated and user_obj != request.user:
+        is_following = Follow.objects.filter(follower=request.user, followed=user_obj).exists()
+
+    return render(
+        request, 
+        'forum/user_profile.html', 
+        {
+            'user_obj': user_obj,
+            'profile': profile,
+            'is_following': is_following,
+        }
+    )
+
 
 @login_required
 def update_profile_picture(request):
@@ -292,3 +310,26 @@ def test_upload(request):
 @login_required
 def tips_view(request):
     return render(request, 'forum/tips.html')
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+    if not created:
+        # If the like already exists, it means user is "unliking" the post
+        like.delete()
+    return redirect('posts')  # or wherever you want to redirect
+
+@login_required
+def follow_user(request, user_id):
+    user_to_follow = get_object_or_404(User, id=user_id)
+    if user_to_follow == request.user:
+        return redirect('home')  # Can't follow yourself, or handle error
+    
+    follow_obj, created = Follow.objects.get_or_create(follower=request.user, followed=user_to_follow)
+    if not created:
+        # Unfollow if it already existed
+        follow_obj.delete()
+    return redirect('user_profile', user_id=user_to_follow.id)
+
+# If you have a user_profile route, you'd see the changes after redirect

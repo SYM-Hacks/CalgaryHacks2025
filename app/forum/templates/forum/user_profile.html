@@ -22,6 +22,15 @@
         .bio-edit {
             display: none; /* Initially hidden */
         }
+        .follow-info {
+            margin-top: 10px;
+        }
+        /* Button group ensures consistent sizing */
+        .btn-group {
+            display: flex;
+            gap: 10px; 
+            margin-top: 20px; /* Spacing above the buttons */
+        }
     </style>
 </head>
 <body>
@@ -29,21 +38,48 @@
         <header>
             <h1>{{ user_obj.username }}'s Profile</h1>
         </header>
+        
         <section class="profile-info">
+            <!-- Profile Picture -->
             {% if profile.profile_pic %}
                 <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" class="profile-pic">
             {% else %}
                 <img src="{% static 'forum/dif.jpg' %}" alt="Default Profile Picture" class="profile-pic">
             {% endif %}
+            
+            <!-- Username & Bio -->
             <h2>{{ user_obj.username }}</h2>
             <p>{{ profile.bio|default:"No bio available." }}</p>
+            
+            <!-- Followers / Following Counts -->
+            <div class="follow-info">
+                <p>
+                    Followers: {{ user_obj.followers.count }} | 
+                    Following: {{ user_obj.following.count }}
+                </p>
+            </div>
         </section>
-        <nav class="profile-nav">
+
+        <!-- Action Buttons (all in one .btn-group) -->
+        <div class="btn-group">
+            <!-- Home button -->
             <a href="{% url 'home' %}" class="btn">Home</a>
+
             {% if user_obj == request.user %}
+                <!-- Edit Your Profile button if this is the current user's profile -->
                 <a href="{% url 'profile' %}" class="btn">Edit Your Profile</a>
+            {% else %}
+                <!-- Follow/Unfollow Toggle -->
+                {% if is_following %}
+                    <a href="{% url 'follow_user' user_obj.id %}" class="btn">Unfollow</a>
+                {% else %}
+                    <a href="{% url 'follow_user' user_obj.id %}" class="btn">Follow</a>
+                {% endif %}
+                
+                <!-- Message This User (goes to get_or_create_chat) -->
+                <a href="{% url 'get_or_create_chat' user_obj.id %}" class="btn">Message This User</a>
             {% endif %}
-        </nav>
+        </div>
     </div>
     <script src="{% static 'forum/script.js' %}"></script>
 </body>

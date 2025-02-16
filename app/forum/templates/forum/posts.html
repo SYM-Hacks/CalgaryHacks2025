@@ -65,7 +65,7 @@
                     <a href="{% url 'home' %}" class="btn">Home</a>
                     <a href="{% url 'messages' %}" class="btn">Messages</a>
                     <a href="{% url 'profile' %}" class="btn">Profile</a>
-                    <a href="{% url 'tips' %}" class="btn">Tips & Resources</a>
+                    <a href="{% url 'tips' %}" class="btn">Tips &amp; Resources</a>
                 </nav>
             </div>
         </header>
@@ -124,6 +124,16 @@
                         in <strong>{{ post.category.name }}</strong> 
                         on {{ post.created_at }}
                     </small>
+                    
+                    <!-- Like Toggle Button -->
+                    <div style="margin-top:10px;">
+                        {% if post.has_liked %}
+                            <a href="{% url 'like_post' post.id %}" class="btn btn-secondary">Unlike</a>
+                        {% else %}
+                            <a href="{% url 'like_post' post.id %}" class="btn btn-secondary">Like</a>
+                        {% endif %}
+                        <small>({{ post.like_set.count }} likes)</small>
+                    </div>
                 </div>
             {% empty %}
                 <p>No posts yet in this category. Be the first to share something!</p>
