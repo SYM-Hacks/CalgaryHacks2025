@@ -141,3 +141,13 @@ def send_message(request):
 def profile_view(request):
     # You can pass additional context if needed, here we're just using request.user
     return render(request, 'forum/profile.html')
+
+@login_required
+def update_bio_view(request):
+    if request.method == "POST":
+        new_bio = request.POST.get('bio', '')
+        # Save the new bio; for example, if using a Profile model linked to User:
+        profile = request.user.profile  # Adjust according to your implementation
+        profile.bio = new_bio
+        profile.save()
+    return redirect('profile')
