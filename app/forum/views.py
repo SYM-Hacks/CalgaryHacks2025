@@ -112,7 +112,7 @@ def send_message(request):
             return JsonResponse({"status": "success", "message": message.content})
 
     return JsonResponse({"status": "error", "message": "Invalid request"}, status=400)
-@login_required
+
 @login_required
 def profile_view(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
