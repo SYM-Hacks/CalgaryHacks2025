@@ -16,7 +16,6 @@
                 <a href="{% url 'messages' %}" class="btn">Messages</a>
                 <a href="{% url 'profile' %}" class="btn">Profile</a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'logout' %}" class="btn">Logout</a>
                 {% else %}
                     <a href="{% url 'login' %}" class="btn">Login</a>
                 {% endif %}
