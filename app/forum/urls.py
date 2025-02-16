@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, signup, login_view, logout_view, posts_view, profile_view, user_list, chat_list
+from .views import home, signup, login_view, logout_view, posts_view, profile_view, user_list, chat_list, create_post, update_bio_view
 from . import views
 
 urlpatterns = [
@@ -15,5 +15,7 @@ urlpatterns = [
     path("chats/<int:chat_id>/send/", views.send_message, name="send_message"),
     path("users/", user_list, name="user_list"),
     path("chats/", chat_list, name="chat_list"),
-    path("messages/", user_list, name="messages")
+    path("messages/", user_list, name="messages"),
+    path('update-bio/', update_bio_view, name='update_bio'),
+    path('create_post/', create_post, name='create_post'),
 ]

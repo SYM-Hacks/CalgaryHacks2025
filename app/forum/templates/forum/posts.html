@@ -17,29 +17,56 @@
                 <a href="{% url 'profile' %}" class="btn">Profile</a>
             </nav>
         </header>
-        
+
+        <!-- Category Filter -->
+        <section class="category-filter">
+            <h2>Filter by Category:</h2>
+            <nav>
+                <a href="{% url 'posts' %}" class="btn">All Categories</a>
+                {% for category in categories %}
+                    <a href="?category={{ category.name }}" class="btn">{{ category.name }}</a>
+                {% endfor %}
+            </nav>
+        </section>
+
+        <!-- Post Creation Form -->
         <section class="post-form">
             <h2>Create a New Post</h2>
-            <form method="POST">
+            <form method="POST" action="{% url 'create_post' %}">
                 {% csrf_token %}
                 <input type="text" name="title" placeholder="Post Title" required>
                 <textarea name="content" placeholder="Write your post here..." required></textarea>
+            
+                <label for="category">Select Category:</label>
+                <select name="category" required>
+                    <option value="" disabled selected>-- Choose a Category --</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            
                 <button type="submit" class="btn">Post</button>
             </form>
-        
+        </section>
+
+        <!-- Display Posts -->
         <section class="posts">
             <h2>Recent Posts</h2>
             {% for post in posts %}
                 <div class="post">
                     <h3>{{ post.title }}</h3>
                     <p>{{ post.content }}</p>
-                    <small>Posted by <strong>{{ post.author.username }}</strong> on {{ post.created_at }}</small>
+                    <small>
+                        Posted by <strong>{{ post.user.username }}</strong> 
+                        in <strong>{{ post.category.name }}</strong> 
+                        on {{ post.created_at }}
+                    </small>
                 </div>
             {% empty %}
-                <p>No posts yet. Be the first to share something!</p>
+                <p>No posts yet in this category. Be the first to share something!</p>
             {% endfor %}
         </section>
-        
+
     </div>
     <script src="{% static 'forum/script.js' %}"></script>
 </body>

@@ -16,14 +16,27 @@ class Category(models.Model):
         return self.name
 
 class Post(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=get_default_user)
     title = models.CharField(max_length=255)
     content = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Category selection
     created_at = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=get_default_category)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default=get_default_user)
 
     def __str__(self):
-        return self.title
+        return f"{self.title} - {self.category.name}"
+
+class Chat(models.Model):
+    user1 = models.ForeignKey(User, related_name='chats_as_user1', on_delete=models.CASCADE, null=False, blank=False)
+    user2 = models.ForeignKey(User, related_name='chats_as_user2', on_delete=models.CASCADE, null=False, blank=False)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def get_other_user(self, current_user):
+        """Returns the other participant in the chat."""
+        return self.user2 if self.user1 == current_user else self.user1
+
+    def __str__(self):
+        return f"Chat between {self.user1} and {self.user2}"
+
 
 class Chat(models.Model):
     user1 = models.ForeignKey(User, related_name='chats_as_user1', on_delete=models.CASCADE, null=False, blank=False)
@@ -43,3 +56,15 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.sender.username}: {self.content}"
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True)  # Bio field; can be empty
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+    
+    

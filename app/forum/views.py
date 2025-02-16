@@ -4,10 +4,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .models import Post, Category, Message, Profile, Chat
 import json
-from .models import Post, Message, Chat
 from django.contrib.auth.models import User
-
 
 def signup(request):
     if request.method == "POST":
@@ -37,26 +36,54 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+
 @login_required
 def home(request):
-    posts = Post.objects.all()
-    return render(request, 'forum/home.html', {'posts': posts})
+    category_filter = request.GET.get('category', None)
+
+    # Get admin users (staff or superusers)
+    admin_users = User.objects.filter(is_staff=True)  # Only staff/admin users
+
+    # Filter posts by admin users
+    if category_filter:
+        posts = Post.objects.filter(user__in=admin_users, category__name=category_filter)
+    else:
+        posts = Post.objects.filter(user__in=admin_users)  # Only admin posts
+
+    categories = Category.objects.all()
+    return render(request, 'forum/home.html', {'posts': posts, 'categories': categories})
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        category_id = request.POST.get('category')
+
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            category = None
+
+        if category:
+            Post.objects.create(user=request.user, title=title, content=content, category=category)
+            return redirect('posts')
+
+    categories = Category.objects.all()
+    return render(request, 'forum/post.html', {'categories': categories})
+
+
 
 @login_required
 def posts_view(request):
-    if request.method == "POST":
-        title = request.POST.get("title")
-        content = request.POST.get("content")
-        author = request.user  # Ensure author is assigned
+    categories = Category.objects.all()
+    category_filter = request.GET.get('category')
+    if category_filter:
+        posts = Post.objects.filter(category__name=category_filter).order_by("-created_at")
+    else:
+        posts = Post.objects.all().order_by("-created_at")
+    return render(request, "forum/posts.html", {"posts": posts, "categories": categories})
 
-        if title and content:
-            Post.objects.create(title=title, content=content, author=author)
-
-        return redirect("posts")  # Redirect after poçsting
-
-    # Fetch all posts to display
-    posts = Post.objects.all().order_by("-created_at")
-    return render(request, "forum/posts.html", {"posts": posts})
 
 
 
@@ -73,6 +100,8 @@ def get_messages(request):
     message_data = [{"sender": msg.sender.username, "content": msg.content} for msg in messages]
     return JsonResponse({"messages": message_data})
 
+@csrf_exempt
+@login_required
 def send_message(request, chat_id):
     if request.method == "POST":
         chat = Chat.objects.get(id=chat_id)
@@ -87,8 +116,19 @@ def send_message(request, chat_id):
 
 @login_required
 def profile_view(request):
-    # You can pass additional context if needed, here we're just using request.user
-    return render(request, 'forum/profile.html')
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    return render(request, 'forum/profile.html', {'bio': profile.bio})
+
+
+@login_required
+def update_bio_view(request):
+    if request.method == "POST":
+        new_bio = request.POST.get('bio', '').strip()
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        profile.bio = new_bio  # Assign the new bio
+        profile.save()
+    return redirect('profile')
+
 
 @login_required
 def chat_list(request):
