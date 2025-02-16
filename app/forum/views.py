@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Post, Category,Message
+from .models import Post, Category,Message,Profile
 import json
 
 
@@ -74,7 +74,6 @@ def create_post(request):
 
 
 @login_required
-@login_required
 def posts_view(request):
     categories = Category.objects.all()
     posts = Post.objects.all().order_by("-created_at")
@@ -117,9 +116,8 @@ def profile_view(request):
 @login_required
 def update_bio_view(request):
     if request.method == "POST":
-        new_bio = request.POST.get('bio', '')
-        # Save the new bio; for example, if using a Profile model linked to User:
-        profile = request.user.profile  # Adjust according to your implementation
-        profile.bio = new_bio
+        new_bio = request.POST.get('bio', '').strip()
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        profile.bio = new_bio  # Assign the new bio
         profile.save()
     return redirect('profile')
