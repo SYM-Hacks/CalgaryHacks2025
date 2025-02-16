@@ -32,11 +32,11 @@
         <!-- Post Creation Form -->
         <section class="post-form">
             <h2>Create a New Post</h2>
-            <form method="POST">
+            <form method="POST" action="{% url 'create_post' %}">
                 {% csrf_token %}
                 <input type="text" name="title" placeholder="Post Title" required>
                 <textarea name="content" placeholder="Write your post here..." required></textarea>
-
+            
                 <label for="category">Select Category:</label>
                 <select name="category" required>
                     <option value="" disabled selected>-- Choose a Category --</option>
@@ -44,7 +44,7 @@
                         <option value="{{ category.id }}">{{ category.name }}</option>
                     {% endfor %}
                 </select>
-
+            
                 <button type="submit" class="btn">Post</button>
             </form>
         </section>

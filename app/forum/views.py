@@ -70,7 +70,7 @@ def create_post(request):
 
         if category:
             Post.objects.create(user=request.user, title=title, content=content, category=category)
-            return redirect('home')
+            return redirect('posts')
 
     categories = Category.objects.all()
     return render(request, 'forum/post.html', {'categories': categories})
@@ -80,7 +80,11 @@ def create_post(request):
 @login_required
 def posts_view(request):
     categories = Category.objects.all()
-    posts = Post.objects.all().order_by("-created_at")
+    category_filter = request.GET.get('category')
+    if category_filter:
+        posts = Post.objects.filter(category__name=category_filter).order_by("-created_at")
+    else:
+        posts = Post.objects.all().order_by("-created_at")
     return render(request, "forum/posts.html", {"posts": posts, "categories": categories})
 
 
