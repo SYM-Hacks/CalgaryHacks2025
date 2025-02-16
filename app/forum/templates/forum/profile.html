@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Community</title>
+    <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+</head>
+<body>
+    <div class="container profile-container">
+        <header>
+            <h1>Your Profile</h1>
+        </header>
+
+        <section class="profile-info">
+            <!-- Default profile picture -->
+            <img src="dif.jpg" alt="Default Profile Picture" class="profile-pic">
+            <!-- Display the logged-in user's username -->
+            <h2>{{ request.user.username }}</h2>
+        </section>
+
+        <nav class="profile-nav">
+            <!-- Logout button -->
+            <a href="{% url 'logout' %}" class="btn">Logout</a>
+            <!-- Back to Home button -->
+            <a href="{% url 'home' %}" class="btn">Home</a>
+        </nav>
+    </div>
+    <script src="{% static 'forum/script.js' %}"></script>
+</body>
+</html>

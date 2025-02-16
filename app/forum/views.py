@@ -29,6 +29,7 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
 
+
 @login_required
 def logout_view(request):
     logout(request)
@@ -83,3 +84,7 @@ def send_message(request):
             return JsonResponse({"status": "success", "message": message.content})
 
     return JsonResponse({"status": "error", "message": "Invalid request"}, status=400)
+@login_required
+def profile_view(request):
+    # You can pass additional context if needed, here we're just using request.user
+    return render(request, 'forum/profile.html')
