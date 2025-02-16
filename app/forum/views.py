@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from .models import Post
 
 def signup(request):
@@ -26,6 +26,7 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'forum/login.html', {'form': form})
 
+
 @login_required
 def logout_view(request):
     logout(request)
@@ -35,6 +36,7 @@ def logout_view(request):
 def home(request):
     posts = Post.objects.all()
     return render(request, 'forum/home.html', {'posts': posts})
+
 
 @login_required
 def posts_view(request):

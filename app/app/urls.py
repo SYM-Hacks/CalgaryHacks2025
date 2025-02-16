@@ -29,4 +29,5 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
     path('', home, name='home'),  # Home is now protected (only logged-in users can access)
     path('accounts/', include('django.contrib.auth.urls')),  # Default auth system
+    path('', include('forum.urls')),
 ]
