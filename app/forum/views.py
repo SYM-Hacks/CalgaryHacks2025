@@ -172,24 +172,6 @@ def chat_detail(request, chat_id):
         "other_user": chat.get_other_user(request.user),
     })
 
-
-
-def send_message(request, chat_id):
-    """Handle sending a new message"""
-    if request.method == "POST":
-        chat = get_object_or_404(Chat, id=chat_id)
-
-        # Ensure the user is a participant in the chat
-        if request.user not in chat.participants.all():
-            return redirect("messages")
-
-        content = request.POST.get("message_content", "").strip()
-
-        if content:
-            Message.objects.create(chat=chat, sender=request.user, content=content)
-
-        return redirect("chat_detail", chat_id=chat.id)  # ✅ Redirect back to chat
-
 @login_required
 def messages_view(request, user_id=None):
     if user_id:
