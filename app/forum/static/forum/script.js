@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!pausedUpdates) {
             loadMessages();
         }
-    }, 3000);
+    }, 1000);
 
     // Initial load
     loadMessages();
