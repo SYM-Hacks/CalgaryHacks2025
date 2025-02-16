@@ -7,7 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Post, Category, Message, Profile, Chat
 import json
 from django.contrib.auth.models import User
-
+from django.utils import timezone
+import pytz
 
 def signup(request):
     if request.method == "POST":
@@ -96,10 +97,20 @@ def messaging_view(request):
 
 @login_required
 def get_messages(request):
-    """Return recent messages as JSON"""
-    messages = Message.objects.all().order_by('timestamp')
-    message_data = [{"sender": msg.sender.username, "content": msg.content} for msg in messages]
+    chat_id = request.GET.get('chat_id')
+    chat = get_object_or_404(Chat, id=chat_id)
+    messages = chat.messages.all().order_by('timestamp')
+    mountain_tz = pytz.timezone("America/Denver")  # Mountain Time (with DST adjustments)
+    message_data = [
+        {
+            "sender": msg.sender.username,
+            "content": msg.content,
+            "timestamp": timezone.localtime(msg.timestamp, mountain_tz).strftime("%Y-%m-%d %H:%M:%S")
+        }
+        for msg in messages
+    ]
     return JsonResponse({"messages": message_data})
+
 
 @csrf_exempt
 @login_required

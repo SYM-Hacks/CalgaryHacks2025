@@ -19,4 +19,5 @@ urlpatterns = [
     path('update-bio/', update_bio_view, name='update_bio'),
     path('create_post/', create_post, name='create_post'),
     path('profile/<int:user_id>/', views.user_profile, name='user_profile'),
+    path('api/get_chat_messages/', views.get_messages, name='get_chat_messages'),
 ]
