@@ -6,7 +6,7 @@
     <title>Messages - Community</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
-    </head>
+</head>
 <body>
     <div class="container">
         <header>
@@ -20,16 +20,54 @@
         
         <section class="messages">
             <h2>Chat with Community Members</h2>
-            <div class="chat-box">
-                <p><strong>User1:</strong> Hello everyone!</p>
-                <p><strong>User2:</strong> Hi! How's your day going?</p>
+            <div class="chat-box" id="chat-box">
+                {% for message in messages %}
+                    <p><strong>{{ message.sender.username }}:</strong> {{ message.content }}</p>
+                {% endfor %}
             </div>
-            <form method="POST" class="message-form">
-                <input type="text" name="message" placeholder="Type your message..." required>
+            
+            <form method="POST" class="message-form" id="message-form">
+                {% csrf_token %}
+                <input type="text" name="message" id="message-input" placeholder="Type your message..." required>
                 <button type="submit" class="btn">Send</button>
             </form>
         </section>
     </div>
-    <script src="{% static 'forum/script.js' %}"></script>
+
+    <script>
+        function fetchMessages() {
+            fetch("{% url 'get_messages' %}") // Replace with your actual view name
+                .then(response => response.json())
+                .then(data => {
+                    let chatBox = document.getElementById('chat-box');
+                    chatBox.innerHTML = '';
+                    data.messages.forEach(msg => {
+                        chatBox.innerHTML += `<p><strong>${msg.sender}:</strong> ${msg.content}</p>`;
+                    });
+                });
+        }
+
+        document.getElementById("message-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let messageInput = document.getElementById("message-input").value;
+            
+            fetch("{% url 'send_message' %}", { // Replace with your actual send message view
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ message: messageInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("message-input").value = "";
+                fetchMessages(); // Refresh messages
+            });
+        });
+
+        setInterval(fetchMessages, 1000); // Fetch messages every second
+    </script>
+
 </body>
 </html>
