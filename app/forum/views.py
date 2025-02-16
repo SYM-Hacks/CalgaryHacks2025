@@ -4,12 +4,12 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Profile, Chat, Message, Post, Category, Like, Follow, Comment
+from .models import Profile, Chat, Message, Post, Category, Like, Follow, Comment, FinancialEntry
 import json
 from django.contrib.auth.models import User
 from django.utils import timezone
 import pytz
-from .forms import ProfilePictureForm
+from .forms import ProfilePictureForm, FinancialEntryForm
 
 
 def signup(request):
@@ -308,10 +308,6 @@ def test_upload(request):
     return render(request, "forum/test_upload.html")
 
 @login_required
-def tips_view(request):
-    return render(request, 'forum/tips.html')
-
-@login_required
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -341,3 +337,42 @@ def add_comment(request, post_id):
         if content:
             Comment.objects.create(post=post, user=request.user, content=content)
     return redirect("posts")
+
+@login_required
+def tips_view(request):
+    craving = request.GET.get('craving', '')
+    recipes = []
+    if craving:
+        recipes = [
+            {'title': f'{craving.title()} Delight', 'url': 'https://example.com/recipe1'},
+            {'title': f'Easy {craving.title()}', 'url': 'https://example.com/recipe2'},
+            {'title': f'{craving.title()} Special', 'url': 'https://example.com/recipe3'},
+        ]
+    return render(request, 'forum/tips.html', {'recipes': recipes})
+
+
+@login_required
+def finance_manager(request):
+    if request.method == 'POST':
+        form = FinancialEntryForm(request.POST)
+        if form.is_valid():
+            entry = form.save(commit=False)
+            entry.user = request.user
+            entry.save()
+            return redirect('finance_manager')
+    else:
+        form = FinancialEntryForm()
+    # Get current user's entries, most recent first
+    entries = FinancialEntry.objects.filter(user=request.user).order_by('-date')
+    # Compute summary totals
+    total_income = sum(entry.amount for entry in entries if entry.entry_type == 'income')
+    total_expense = sum(entry.amount for entry in entries if entry.entry_type == 'expense')
+    balance = total_income - total_expense
+
+    return render(request, 'forum/finance_manager.html', {
+        'form': form,
+        'entries': entries,
+        'total_income': total_income,
+        'total_expense': total_expense,
+        'balance': balance,
+    })

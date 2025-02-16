@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Finance Manager - Community</title>
+  <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+  <style>
+    /* Header layout: logo on left, title centered, vertical nav on right */
+    .header-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .header-left img {
+      width: 80px;
+      height: auto;
+    }
+    .header-center {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+    .header-center h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+    .header-right {
+      flex: 0 0 auto;
+    }
+    .nav-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .nav-vertical a.btn {
+      text-align: center;
+    }
+    /* Finance Manager page styles */
+    .summary {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f8f8f8;
+      border-radius: 5px;
+    }
+    .entry-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .entry-table th,
+    .entry-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    .entry-table th {
+      background: #dc3545;
+      color: white;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header-main">
+      <div class="header-left">
+        <img src="{% static 'forum/community.png' %}" alt="Community Logo">
+      </div>
+      <div class="header-center">
+        <h1>Finance Manager</h1>
+      </div>
+      <div class="header-right">
+        <nav class="nav-vertical">
+          <a href="{% url 'home' %}" class="btn">Home</a>
+          <a href="{% url 'posts' %}" class="btn">Posts</a>
+          <a href="{% url 'profile' %}" class="btn">Profile</a>
+          <a href="{% url 'messages' %}" class="btn">Messages</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Finance Entry Form -->
+    <section>
+      <h2>Enter a New Financial Entry</h2>
+      <form method="POST" action="{% url 'finance_manager' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          {{ form.entry_type.label_tag }}<br>
+          {{ form.entry_type }}
+        </div>
+        <div class="form-group">
+          {{ form.description.label_tag }}<br>
+          {{ form.description }}
+        </div>
+        <div class="form-group">
+          {{ form.amount.label_tag }}<br>
+          {{ form.amount }}
+        </div>
+        <button type="submit" class="btn">Save Entry</button>
+      </form>
+    </section>
+
+    <!-- Summary Section -->
+    <section class="summary">
+      <h3>Summary</h3>
+      <p>Total Income: ${{ total_income }}</p>
+      <p>Total Expenses: ${{ total_expense }}</p>
+      <p><strong>Balance: ${{ balance }}</strong></p>
+    </section>
+
+    <!-- List of Financial Entries -->
+    <section>
+      <h2>Your Financial Entries</h2>
+      {% if entries %}
+      <table class="entry-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in entries %}
+          <tr>
+            <td>{{ entry.date }}</td>
+            <td>{{ entry.get_entry_type_display }}</td>
+            <td>{{ entry.description }}</td>
+            <td>${{ entry.amount }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p>You have not entered any financial data yet.</p>
+      {% endif %}
+    </section>
+  </div>
+</body>
+</html>

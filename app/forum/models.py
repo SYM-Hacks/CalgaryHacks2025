@@ -90,3 +90,17 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} commented on {self.post.title}"
+
+class FinancialEntry(models.Model):
+    ENTRY_TYPES = (
+        ('income', 'Income'),
+        ('expense', 'Expense'),
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    entry_type = models.CharField(max_length=10, choices=ENTRY_TYPES, default='expense')
+    description = models.CharField(max_length=255)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField(auto_now_add=True)  # or use a DateField input if you want manual entry
+
+    def __str__(self):
+        return f"{self.get_entry_type_display()}: {self.description} (${self.amount})"

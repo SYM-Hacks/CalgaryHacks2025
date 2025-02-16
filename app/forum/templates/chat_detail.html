@@ -36,18 +36,13 @@
             margin-top: 5px;
             border-radius: 5px;
         }
-        /* Debug style for image URL display (remove later) */
-        .debug-url {
-            font-size: 0.8em;
-            color: #555;
-            margin-bottom: 5px;
-        }
     </style>
 </head>
 <body class="bg-light">
     <div class="container mt-4">
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <!-- Changed bg-primary to bg-danger for a red header -->
+            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
                 <h5>Chat with {{ other_user.username }}</h5>
                 <a href="{% url 'messages' %}" class="btn btn-sm btn-light">Back</a>
             </div>
@@ -62,8 +57,6 @@
                                     <p class="mb-0">{{ message.content }}</p>
                                 {% endif %}
                                 {% if message.image %}
-                                    <!-- Debug: display image URL -->
-                                    <div class="debug-url">{{ message.image.url }}</div>
                                     <img src="{{ message.image.url }}" alt="Message Image" class="message-image">
                                 {% endif %}
                                 <small class="text-muted">{{ message.timestamp }}</small>
@@ -77,8 +70,6 @@
                                     <p class="mb-0">{{ message.content }}</p>
                                 {% endif %}
                                 {% if message.image %}
-                                    <!-- Debug: display image URL -->
-                                    <div class="debug-url">{{ message.image.url }}</div>
                                     <img src="{{ message.image.url }}" alt="Message Image" class="message-image">
                                 {% endif %}
                                 <small class="text-muted">{{ message.timestamp }}</small>

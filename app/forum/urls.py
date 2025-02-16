@@ -26,4 +26,5 @@ urlpatterns = [
     path('follow/<int:user_id>/', views.follow_user, name='follow_user'),
     path("chats/new/<int:user_id>/", views.get_or_create_chat, name="get_or_create_chat"),
     path("comment/<int:post_id>/", views.add_comment, name="add_comment"),
+    path('finance/', views.finance_manager, name='finance_manager'),
 ]

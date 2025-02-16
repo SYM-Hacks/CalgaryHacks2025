@@ -1,169 +1,124 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <title>Tips & Resources</title>
-    <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
-    <style>
-        /* Header layout: image on left, heading centered, vertical nav on right */
-        .header-main {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .header-left img {
-            width: 80px;
-            height: auto;
-        }
-        .header-center {
-            flex: 1 1 auto;
-            text-align: center;
-        }
-        .header-center h1 {
-            margin: 0;
-            font-size: 2em;
-        }
-        .header-right {
-            flex: 0 0 auto;
-            text-align: right;
-        }
-        .nav-vertical {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .nav-vertical a.btn {
-            text-align: center; /* center the button text */
-        }
-
-        /* Styling the sections */
-        .tips-section {
-            margin-bottom: 40px; /* space between each major section */
-        }
-        .tips-section h2 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 1.5em;
-            color: #dc3545; /* red accent for headings if desired */
-        }
-        .tips-section p,
-        .tips-section li {
-            line-height: 1.5em;
-        }
-        .tips-subtitle {
-            font-weight: bold;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-size: 1.1em;
-        }
-        /* List styling inside each section */
-        .tips-list {
-            margin-left: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finance & Recipe Helper - Community</title>
+  <link rel="stylesheet" href="{% static 'forum/styles.css' %}">
+  <style>
+    /* Header layout: logo on left, title in center, vertical nav on right */
+    .header-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .header-left img {
+      width: 80px;
+      height: auto;
+    }
+    .header-center {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+    .header-center h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+    .header-right {
+      flex: 0 0 auto;
+      text-align: right;
+    }
+    .nav-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .nav-vertical a.btn {
+      text-align: center;
+    }
+    /* Main content sections */
+    .section {
+      margin-bottom: 40px;
+    }
+    .section h2 {
+      color: #dc3545; /* red accent */
+      margin-bottom: 10px;
+    }
+    .section p {
+      line-height: 1.5;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #dc3545;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Three-column header layout -->
-        <header class="header-main">
-            <div class="header-left">
-                <img src="{% static 'forum/community.png' %}" alt="Community Logo">
-            </div>
-            <div class="header-center">
-                <h1>Tips &amp; Resources</h1>
-            </div>
-            <div class="header-right">
-                <nav class="nav-vertical">
-                    <a href="{% url 'home' %}" class="btn">Home</a>
-                    <a href="{% url 'messages' %}" class="btn">Messages</a>
-                    <a href="{% url 'profile' %}" class="btn">Profile</a>
-                </nav>
-            </div>
-        </header>
+  <div class="container">
+    <!-- Header -->
+    <header class="header-main">
+      <div class="header-left">
+        <img src="{% static 'forum/community.png' %}" alt="Community Logo">
+      </div>
+      <div class="header-center">
+        <h1>Finance &amp; Recipe Helper</h1>
+      </div>
+      <div class="header-right">
+        <nav class="nav-vertical">
+          <a href="{% url 'home' %}" class="btn">Home</a>
+          <a href="{% url 'posts' %}" class="btn">Posts</a>
+          <a href="{% url 'profile' %}" class="btn">Profile</a>
+          <a href="{% url 'messages' %}" class="btn">Messages</a>
+        </nav>
+      </div>
+    </header>
 
-        <!-- MAIN CONTENT -->
-        <section class="tips-section">
-            <h2>1. Financial Tips</h2>
-            <p class="tips-subtitle">Start Small, Think Big</p>
-            <p>Open a Checking &amp; Savings Account: Make sure you have at least two accounts—one for everyday spending, one for saving. If you’re not sure where to start, don’t worry. We’ve got daily tips on our website that break down the pros and cons of different banks, so you can pick what works best for you.</p>
-            <p>Build Credit Responsibly: Using credit wisely is key to financial freedom. Check out our budgeting spreadsheet on our site, so you can easily keep track of monthly balances without needing to juggle multiple apps.</p>
+    <!-- Finance Management Section -->
+    <section class="section">
+      <h2>Manage Your Finances</h2>
+      <p>Take control of your budget with our tools and tips. Track your income, expenses, and plan for your future with our on‑site finance manager.</p>
+      <p>
+        <a href="{% url 'finance_manager' %}" class="btn">
+          Manage Your Finances
+        </a>
+      </p>
+    </section>
 
-            <p class="tips-subtitle">Emergency Fund? Yes, Please!</p>
-            <p>Even $10 a week can build up over time. Our site offers quick pointers on how to set aside small amounts daily—you’ll be surprised at how fast it grows when you have a plan in place.</p>
-
-            <p class="tips-subtitle">Learn the Basics of Investing</p>
-            <p>Feeling curious about investing but overwhelmed by the jargon? We provide simple, step-by-step guides that demystify the stock market. No third-party resources needed; we’ve got you covered.</p>
-        </section>
-
-        <section class="tips-section">
-            <h2>2. Budgeting Tips</h2>
-            <p class="tips-subtitle">Know Where Your Money Goes</p>
-            <p>Tracking your spending is a breeze with our all-in-one budgeting spreadsheet. No complicated external tools—just download, fill in, and watch your spending patterns emerge.</p>
-
-            <p class="tips-subtitle">The 50/30/20 Rule</p>
-            <p>We break down this rule in our resource center, complete with examples tailored to different income levels. Daily budgeting tips on our website can help you stick to this method (and maybe keep a little extra for those plushies!).</p>
-
-            <p class="tips-subtitle">Set Goals and Celebrate</p>
-            <p>Whether it’s a dream vacation or paying off a credit card, our website’s progress tracker will nudge you forward with reminders, so you can celebrate each milestone along the way—no confetti cleanup required.</p>
-        </section>
-
-        <section class="tips-section">
-            <h2>3. Meal Preps &amp; Cooking Tips</h2>
-            <p class="tips-subtitle">Plan It Out</p>
-            <p>Our website includes a weekly meal planner that helps you map out breakfast, lunch, and dinner. No more aimless grocery shopping or “What’s for dinner?” panic.</p>
-
-            <p class="tips-subtitle">Get to Know Your Kitchen</p>
-            <p>We’ll share daily cooking tips—from mastering basic stir-fries to experimenting with spices—so you can confidently whip up something delicious without having to scour a dozen recipe blogs.</p>
-
-            <p class="tips-subtitle">Keep it Simple</p>
-            <p>If you’re new to cooking, check out our quick-start videos. They’ll show you simple methods for chopping, sautéing, and seasoning, so your kitchen adventures stay fun (and mostly smoke-alarm free).</p>
-        </section>
-
-        <section class="tips-section">
-            <h2>4. Time Management &amp; Organization</h2>
-            <p class="tips-subtitle">Create a Schedule That Works</p>
-            <p>Need help planning your week? Use our customizable calendar tool to block out time for work, chores, and—most importantly—relaxation. It’s all in one place on our site.</p>
-
-            <p class="tips-subtitle">Break Tasks into Small Steps</p>
-            <p>Big tasks can be overwhelming, so we’ve included a to-do list feature that helps you break projects into bite-sized steps. One click, and you’ll see exactly what you need to do next.</p>
-
-            <p class="tips-subtitle">Avoid Burnout</p>
-            <p>We’ll send you gentle daily reminders to take breaks and breathe. Because a little nudge can prevent a big meltdown.</p>
-        </section>
-
-        <section class="tips-section">
-            <h2>5. Self-Care &amp; Wellbeing</h2>
-            <p class="tips-subtitle">Mind and Body Check</p>
-            <p>On our platform, you’ll find tips for quick mindfulness breaks, easy home workouts, and ways to de-stress when life feels like a juggling act—no need to scour the internet for more.</p>
-
-            <p class="tips-subtitle">Set Realistic Expectations</p>
-            <p>We’re all about progress, not perfection. Our community forum offers support and shared experiences, so you know you’re not alone if you occasionally burn the toast or forget to fold the laundry.</p>
-        </section>
-
-        <section class="tips-section">
-            <h2>6. Household Basics &amp; Maintenance</h2>
-            <p class="tips-subtitle">Keep it Tidy (Enough)</p>
-            <p>We’ll show you simple cleaning hacks and routines to keep your space guest-ready without turning into a full-time housekeeper. No external how-to videos needed; it’s all in our resource hub.</p>
-
-            <p class="tips-subtitle">Laundry 101</p>
-            <p>For those who dread laundry day, we have a cheat sheet on sorting clothes, selecting the right wash cycle, and even removing that mysterious stain on your favorite shirt.</p>
-        </section>
-
-        <section class="tips-section">
-            <h2>7. Building Your Support Network</h2>
-            <p class="tips-subtitle">Friends &amp; Neighbors</p>
-            <p>Being independent doesn’t mean being alone. Our site’s community section encourages connecting with others, sharing experiences, and maybe even swapping recipes or budgeting tips.</p>
-
-            <p class="tips-subtitle">Ask for Help</p>
-            <p>Independence is about knowing where to turn when you’re stuck. That’s why we’re here with daily tips and resources—from taxes to fitted sheets—so you can figure it out without feeling lost.</p>
-        </section>
-
-        <section class="tips-section">
-            <h2>Final Note</h2>
-            <p>Remember, adulting is a process—like slow-cooking a hearty stew. You gather the ingredients (financial smarts, budgeting tools, meal prep know-how), let them simmer, and eventually, you get something nourishing and satisfying. The best part? You don’t need a bunch of different sites or apps—we’re here to provide everything you need in one spot. Embrace the learning curve, laugh off the mistakes, and keep going. You’ve got this!</p>
-        </section>
-    </div>
+    <!-- Recipe Suggestions Section -->
+    <section class="section">
+      <h2>Recipe Suggestions</h2>
+      <p>What are you craving? Enter a keyword below to get recipe suggestions that match your taste.</p>
+      <form method="GET" action="{% url 'tips' %}">
+        <div class="form-group">
+          <label for="craving">I’m craving:</label>
+          <input type="text" id="craving" name="craving" placeholder="e.g., pasta, salad, curry" required>
+        </div>
+        <button type="submit" class="btn">Get Recipes</button>
+      </form>
+      <div class="recipe-links">
+        {% if recipes %}
+          <h3>Recipe Results:</h3>
+          <ul>
+            {% for recipe in recipes %}
+              <li>
+                <a href="{{ recipe.url }}" target="_blank">{{ recipe.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>Enter a craving above to see recipe suggestions.</p>
+        {% endif %}
+      </div>
+    </section>
+  </div>
 </body>
 </html>
