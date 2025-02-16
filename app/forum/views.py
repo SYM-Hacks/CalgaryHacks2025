@@ -53,7 +53,7 @@ def posts_view(request):
         return redirect("posts")  # Redirect after poçsting
 
     # Fetch all posts to display
-    posts = Post.objects.all().order_by("-created_at")  # ✅ Fix: Use the correct field name
+    posts = Post.objects.all().order_by("-created_at")
     return render(request, "forum/posts.html", {"posts": posts})
 
 

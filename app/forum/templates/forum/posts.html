@@ -26,17 +26,6 @@
                 <textarea name="content" placeholder="Write your post here..." required></textarea>
                 <button type="submit" class="btn">Post</button>
             </form>
-        </section>
-        
-        <section class="post-form">
-            <h2>Create a New Post</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <input type="text" name="title" placeholder="Post Title" required>
-                <textarea name="content" placeholder="Write your post here..." required></textarea>
-                <button type="submit" class="btn">Post</button>
-            </form>
-        </section>
         
         <section class="posts">
             <h2>Recent Posts</h2>
@@ -44,7 +33,7 @@
                 <div class="post">
                     <h3>{{ post.title }}</h3>
                     <p>{{ post.content }}</p>
-                    <small>Posted by <strong>{{ post.author.username }}</strong> on {{ post.timestamp }}</small>
+                    <small>Posted by <strong>{{ post.author.username }}</strong> on {{ post.created_at }}</small>
                 </div>
             {% empty %}
                 <p>No posts yet. Be the first to share something!</p>
