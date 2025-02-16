@@ -288,3 +288,7 @@ def test_upload(request):
         print("Uploaded files:", request.FILES)  # Check your console for output
         return redirect("home")
     return render(request, "forum/test_upload.html")
+
+@login_required
+def tips_view(request):
+    return render(request, 'forum/tips.html')

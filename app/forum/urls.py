@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/get_chat_messages/', views.get_messages, name='get_chat_messages'),
     path('profile/update_picture/', views.update_profile_picture, name='update_profile_picture'),
     path('test-upload/', views.test_upload, name='test_upload'),
+    path('tips/', views.tips_view, name='tips'),
 ]
