@@ -1,0 +1,10 @@
+# Python version: >=3.9 (Ensure you have the correct Python version installed)
+Django>=4.2,<5.0
+channels>=3.0
+mysqlclient>=2.1.0
+Pillow>=9.0.0
+pytz
+
+# Optional IDE for development:
+# Visual Studio Code: https://code.visualstudio.com/
+# (Alternatively, you can use Visual Studio or any other IDE you prefer)
