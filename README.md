@@ -26,7 +26,7 @@ Calgary Connect is a web-based solution designed to help individuals who are **n
 
 2. **Direct Messaging**
    - One-on-one chats for personalized support or to build friendships with other new Calgarians.
-   - Optionally uses WebSockets (via Django Channels) for real-time messaging or a JavaScript polling fallback.
+   - In the future it will use WebSockets (via Django Channels) for real-time messaging but for now it's a JavaScript polling fallback.
 
 3. **Finance Manager**
    - Track income and expenses directly on the site—no external spreadsheet required.
@@ -48,9 +48,9 @@ Calgary Connect is a web-based solution designed to help individuals who are **n
 
 - **Backend**: [Django](https://www.djangoproject.com/) (Python)  
 - **Database**: [MySQL](https://www.mysql.com/)  
-- **Real-Time**: [Django Channels](https://channels.readthedocs.io/en/stable/) (Optional WebSockets)  
-- **Frontend**: [Bootstrap 5](https://getbootstrap.com/), plus custom CSS  
-- **Authentication**: Django’s built-in user model and session management  
+- **Real-Time**: JavaScript Polling using [setInterval](https://developer.mozilla.org/en-US/docs/Web/API/setInterval) to update messages every second  
+- **Frontend**: [Bootstrap 5](https://getbootstrap.com/) along with custom CSS  
+- **Authentication**: Django’s built-in user model and session management
 
 ---
 
